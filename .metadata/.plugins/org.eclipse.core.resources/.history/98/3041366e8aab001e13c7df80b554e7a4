@@ -1,0 +1,33 @@
+package com.example.demo;
+
+import java.util.List;
+
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import org.slf4j.Logger;
+
+@RestController
+public class MyController
+{
+	Logger logger=LoggerFactory.getLogger(MyController.class);
+	@Autowired
+	public DaoInterface dao;
+	@Autowired
+	public ShopDao sDao;
+	
+	@PostMapping("/addProduct")
+	public ProductEntity addProduct(ProductEntity product)
+	{
+		return dao.save(product);
+	}
+	@GetMapping("/getProduct")
+	public List<ProductEntity> getProduct(ProductEntity product)
+	{
+		return  dao.findAll();
+	}
+}

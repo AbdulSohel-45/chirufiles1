@@ -1,0 +1,60 @@
+package com.example.demo;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
+
+@RestController
+public class MyController 
+{
+	@Autowired
+	DaoInterface dao;
+	@PostMapping(path="/addEmployee",consumes="Test/Employee")
+	public Employee addEmployee(@RequestBody Employee employee)
+	{
+		return dao.save(employee);
+	}
+	@GetMapping("getEmployee/{id}")
+	public ResponseEntity<Employee> getMapping(@PathVariable int id) throws MyException
+	{
+		try 
+		{
+			Optional<Employee> opt = dao.findById(id);
+			return new ResponseEntity<>(opt.get(),HttpStatus.OK);
+		}
+		catch(Exception e)
+		{
+			//return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			throw new MyException("available");
+		}	
+	}
+	@DeleteMapping("/delEmployee/{id}")
+	public String delEmployee(int id)
+	{
+		dao.deleteById(id);
+		return "deleted successfully";
+	}
+	@PutMapping("/editEmployee")
+	public Employee updateEmployee(Employee employee)
+	{
+		return dao.save(employee);
+	}
+	@RequestMapping("/employees")
+	public List<Employee> getEmployes()
+	{
+		return (List<Employee>) dao.findAll();
+	}
+}

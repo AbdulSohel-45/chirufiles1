@@ -1,0 +1,15 @@
+package com.example.demo;
+
+import java.util.List;
+
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+
+public class WebMvcEx extends WebMvcConfigurationSupport
+{
+	@Override
+	public void extendMessageConverters(List<HttpMessageConverter<?>> converters)
+	{
+		converters.add(new UserMessageConverter());
+	}
+}

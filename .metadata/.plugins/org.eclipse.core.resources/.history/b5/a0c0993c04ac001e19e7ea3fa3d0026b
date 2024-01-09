@@ -1,0 +1,27 @@
+package com.example.demo;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class Controller 
+{
+	@Autowired
+	SellerDao dao;
+	@GetMapping("/getById/{sid}")
+	public ResponseEntity<SellerEntity> findById(@PathVariable int sid)
+	{
+		return new ResponseEntity<SellerEntity>(dao.findById(sid).get(),HttpStatus.OK);
+	}
+	@PostMapping("/addProduct")
+	public ResponseEntity<SellerEntity> addProduct(SellerEntity seller)
+	{
+		return new ResponseEntity<SellerEntity>(dao.save(seller),HttpStatus.OK);
+	}
+	public ResponseEntity<T>
+}

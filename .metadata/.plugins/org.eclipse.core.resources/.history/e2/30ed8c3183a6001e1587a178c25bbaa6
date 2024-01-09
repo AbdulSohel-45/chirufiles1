@@ -1,0 +1,47 @@
+package com.example.demo;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("Hateoas")
+public class HateousController
+{
+	@Autowired
+	DaoInterface inter;
+	@RequestMapping(path="/employees")
+	public List<Employee> getEmployes()
+	{
+		return (List<Employee>) inter.findAll();
+	}
+	@RequestMapping(path="/getEmployeeHat/{id}",produces="Text/Employee")
+	public EntityModel<Employee> getEmployeeById(@PathVariable int id) //throws ExcMyException
+	{
+//		try 
+//		{
+//			Optional<Employee> opt = inter.findById(id);
+//			return new EntityModel<>(opt.get(),HttpStatus.OK);
+//		}
+//		catch(Exception e)
+//		{
+//			//return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//			throw new ExcMyException("available");
+//		}	
+//		Optional<Employee> Opt=Optional.of(inter.getById(id));
+		Employee employee=inter.getById(id);
+		EntityModel<Employee> ent=EntityModel.of(employee);
+		ent.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(this.getClass()).getEmployes()).withRel("getEmployees"));
+		return ent;
+		
+	}
+}

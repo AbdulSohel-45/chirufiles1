@@ -1,0 +1,101 @@
+package com.example.demo;
+
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
+
+@RestController
+public class ControllerMy 
+{
+	@Autowired
+	DaoInterface dao;
+	@PostMapping(path="/addEmployee")
+	public Employee addEmployee(@RequestBody Employee employee)
+	{
+		return dao.save(employee);
+	}
+	@GetMapping(path="getEmployee/{id}",produces="Text/Employee")
+	public ResponseEntity<Employee> getEmployee(@PathVariable int id) throws ExcMyException
+	{
+		try 
+		{
+			Optional<Employee> opt = dao.findById(id);
+			return new ResponseEntity<>(opt.get(),HttpStatus.OK);
+		}
+		catch(Exception e)
+		{
+			//return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			throw new ExcMyException("available");
+		}	
+	}
+	@DeleteMapping("/delEmployee/{id}")
+	public String delEmployee(int id)
+	{
+		dao.deleteById(id);
+		return "deleted successfully";
+	}
+	@PutMapping("/editEmployee")
+	public Employee updateEmployee(Employee employee)
+	{
+		return dao.save(employee);
+	}
+	@RequestMapping(path="/employees")
+	public List<Employee> getEmployes()
+	{
+		return (List<Employee>) dao.findAll();
+	}
+	@Value("${value}")
+	String var;
+	@RequestMapping("/do")
+	public String done()
+	{
+		return var;
+	}
+	@Autowired
+	private Environment en;
+	@RequestMapping("/app")
+	public String app()
+	{
+		return en.getProperty("app.random.within.range");
+	}
+	@RequestMapping("info")
+	public Map<String,String> info()
+	{
+		Map<String,String> m=new LinkedHashMap<>();
+		m.put("name", en.getProperty("info.name"));	
+		m.put("add", en.getProperty("info.add"));	
+		m.put("mobile", en.getProperty("info.no"));	
+		return m;
+	}
+	@Autowired
+	AppDetails det;
+	@RequestMapping("/memo")
+	public AppDetails memo()
+	{
+		return det;	
+	}
+	@RequestMapping("/del")
+	public String deleteEmployee()
+	{
+		//return var;
+		return en.getProperty("value");
+	}
+	
+}

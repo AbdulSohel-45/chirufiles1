@@ -1,0 +1,1 @@
+insert into ProductEntity(pid,pname,pprice) values(101,'Hello',56);

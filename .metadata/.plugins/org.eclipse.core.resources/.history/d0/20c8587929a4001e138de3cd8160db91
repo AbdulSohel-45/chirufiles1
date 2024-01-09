@@ -1,0 +1,23 @@
+package com.example.demo;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+public class AppController 
+{
+	@Autowired
+	Dao dao;
+	@RequestMapping("/")
+	public String home()
+	{
+		return "home.jsp";
+	}
+	@RequestMapping("/app")
+	public String app(product product)
+	{
+		
+		return "home.jsp";
+	}
+}

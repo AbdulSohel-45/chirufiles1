@@ -1,0 +1,47 @@
+package com.example.demo;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+//@RequestMapping("/Product")
+public class ProductController 
+{
+	@Autowired
+	ProductService service;
+	@GetMapping("/getProducts")
+	public ResponseEntity<List<Product>> getAllProducts(Product product)
+	{
+		return service.getAllProducts(product);
+		//return new ResponseEntity<>(service.getAllProducts(product),HttpStatus.ACCEPTED);
+	}
+	@PostMapping("/addProducts")
+	public Product addProduct(@RequestBody Product product)
+	{
+		return service.addProduct(product);
+	}
+	@GetMapping("/Name/{pname}")
+	public ResponseEntity<Product> getByName(@PathVariable String pname)
+	{
+		return service.getByName(pname);	
+	}
+	@GetMapping("/Quantity/{pquantity}")
+	public ResponseEntity<List<Product>> getByQuantity(@PathVariable int pquantity)
+	{
+		return service.getByQuantity(pquantity);
+	}
+	@GetMapping("/get/{pid}")
+	public ResponseEntity<Product> getById(@PathVariable int pid)
+	{
+		return service.getById(pid);
+	}
+}
